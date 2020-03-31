@@ -13,6 +13,7 @@ library(egg)
 library(grid)
 library(shinyhelper)
 
+userinfo <- read.table("userinfo.txt",header=T,sep = ",")
 #---------------------initalize plotting------------------------
 pl <- ggplot()+
   theme_bw()+
@@ -659,10 +660,14 @@ server <- function(input,output){
   #--------------submit-------------
   observeEvent(input$submit, {
     time <- as.character(Sys.time())
-    txt <- c(time, input$name, input$aff, input$email)
+    txt <- data.frame(Time = time, Name = input$name, Affiliation = input$aff, Email = input$email)
     
-    cat(txt, file = "/home/covid19/userinfo.txt",sep = ", ",append = TRUE)
-    cat("\n",append = TRUE)
+    userinfo <- rbind(userinfo,txt)
+    write.table(userinfo, file = "userinfo.txt", sep = ",",quote = FALSE,
+                row.names = FALSE, col.names = TRUE)
+    
+    #cat(txt, file = "/home/covid19/userinfo.txt",sep = ", ",append = TRUE)
+    #cat("\n",append = TRUE)
     
     output$thanks <- renderText(
       "Thanks for your submission!"
