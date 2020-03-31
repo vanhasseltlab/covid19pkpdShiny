@@ -281,7 +281,21 @@ body <- dashboardBody(
         )
 
     ),
-    
+    box(width = NULL,
+        id = "box6",
+        collapsible = TRUE,
+        #collapsed = TRUE,
+        status = "primary",
+        solidHeader = TRUE,
+        title = actionLink("titleID6",span(icon("user-circle"),span("User Information",style = "font-weight:bold;font-size:18px"))),
+        textInput("name", "Name:", placeholder = "Name"),
+        textInput("aff", "Affiliation:", placeholder = "Affiliation"),
+        textInput("email", "Email address:", placeholder = "Email address"),
+        div(style="text-align: center;",actionButton("submit", span("Submit",style = "font-weight:bold;font-size:16px"),style = "background-color: #001158; color: white;")),
+        div(style="text-align: center;",span(textOutput("thanks"),style = "font-style: italic; color:#D62728"))
+    )
+  ),
+  
     column(width = 4,
            box(width = NULL, height = 660,
                id = "box3", collapsible = TRUE, 

@@ -656,4 +656,17 @@ server <- function(input,output){
     }
   },height = 600)
   
+  #--------------submit-------------
+  observeEvent(input$submit, {
+    time <- as.character(Sys.time())
+    txt <- c(time, input$name, input$aff, input$email)
+    
+    cat(txt, file = "userinfo.txt",sep = ", ",append = TRUE)
+    cat("\n",append = TRUE)
+    
+    output$thanks <- renderText(
+      "Thanks for your submission!"
+    )
+  })
+  
 }
