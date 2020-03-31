@@ -661,7 +661,7 @@ server <- function(input,output){
     time <- as.character(Sys.time())
     txt <- c(time, input$name, input$aff, input$email)
     
-    cat(txt, file = "~/userinfo.txt",sep = ", ",append = TRUE)
+    cat(txt, file = "/home/covid19/userinfo.txt",sep = ", ",append = TRUE)
     cat("\n",append = TRUE)
     
     output$thanks <- renderText(
