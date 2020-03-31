@@ -278,9 +278,7 @@ body <- dashboardBody(
                          conditionalPanel(condition = "input.ec50_3 == 'Mers-cov 4.4ug/ml (de Wilde AH et al. AAC(2014))'| input.ec50_3 == 'SARS-cov-1 2.52ug/ml (de Wilde AH et al. AAC(2014))'",
                                           tags$a(href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4136071/",target="_blank", "de Wilde AH et al. AAC(2014)",style = "font-size:12px;font-style: italic;"))
         )
-        )
-
-    ),
+        ),
     box(width = NULL,
         id = "box6",
         collapsible = TRUE,
