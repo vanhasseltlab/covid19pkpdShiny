@@ -5,6 +5,7 @@ library(shinyWidgets)
 library(shinyjs)
 library(V8)
 library(shinyhelper)
+library(dplyr)
 
 # javascript code to collapse box
 jscode <- "shinyjs.collapse = function(boxid) {
@@ -22,7 +23,7 @@ body <- dashboardBody(
            setShadow("box"),
            setShadow("Button"),
            
-           #tags$head(includeHTML("gtag.html")),
+           tags$head(includeHTML("gtag.html")),
            
            tags$head(tags$style(HTML(".skin-blue .main-header > .logo { background-color: #001158;
                                      font-weight: bold;
