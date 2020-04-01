@@ -415,33 +415,27 @@ server <- function(input,output){
         fold6 <- 100
         
         #------------- total plasma / EC50-------------
-        sim_hm <- sim_p[0,]
+        Rpmin <- NULL
         
         sum_hm_p <- data.frame(time = NULL, bin = NULL, perc = NULL)
         sum_toxi_p <- data.frame(time = NULL, bin = NULL, perc = NULL)
         
         for (i in (1:ceiling(D1+D2))*24){
-          if (i <= D1) {
-            ii <- ii1
+          if (i == 24) {
+            Rpmin <- sim_p[sim_p$time==ii1,]$Rp
           }else{
-            if (amount2 == 0) {
-              ii <- 24
-            }else{
-              ii <- ii2
-            } 
+            
+            for (k in 1:100){
+              Rpmin[k] <- min(sim_p[sim_p$sim.id == k & sim_p$time > (i-24) & sim_p$time <= i,]$Rp)
+            }
           }
-          if (ii >24) {
-            ii <- 24
-          }
-          sim_hm <- sim_p[sim_p$time==(i - 24 + ii),]
           
-          #perc1 <- sum(sim_hm$Rp<fold1)/100
-          perc2 <- sum(sim_hm$Rp>=fold1)/100
-          perc3 <- sum(sim_hm$Rp>=fold2)/100
-          perc4 <- sum(sim_hm$Rp>=fold3)/100
-          perc5 <- sum(sim_hm$Rp>=fold4)/100
-          perc6 <- sum(sim_hm$Rp>=fold5)/100
-          perc7 <- sum(sim_hm$Rp>=fold6)/100
+          perc2 <- sum(Rpmin>=fold1)/100
+          perc3 <- sum(Rpmin>=fold2)/100
+          perc4 <- sum(Rpmin>=fold3)/100
+          perc5 <- sum(Rpmin>=fold4)/100
+          perc6 <- sum(Rpmin>=fold5)/100
+          perc7 <- sum(Rpmin>=fold6)/100
           
           count <- 0
           for (j in 1:100){
@@ -471,25 +465,20 @@ server <- function(input,output){
         
         #----- free conc/EC50 --------
         
-        sim_hm <- sim_p[0,]
+        Rfmin <- NULL
         
         sum_hm_f <- data.frame(time = NULL, bin = NULL,perc = NULL)
         sum_toxi_f <- data.frame(time = NULL, bin =NULL, perc = NULL)
         
         for (i in (1:ceiling(D1+D2))*24){
-          if (i <= D1) {
-            ii <- ii1
+          if (i == 24) {
+            Rfmin <- sim_p[sim_p$time==ii1,]$Rf
           }else{
-            if (amount2 == 0) {
-              ii <- 24
-            }else{
-              ii <- ii2
-            } 
+            
+            for (k in 1:100){
+              Rfmin[k] <- min(sim_p[sim_p$sim.id == k & sim_p$time > (i-24) & sim_p$time <= i,]$Rf)
+            }
           }
-          if (ii >24) {
-            ii <- 24
-          }
-          sim_hm <- sim_p[sim_p$time==(i - 24 + ii),]
           
           count <- 0
           for (j in 1:100){
@@ -500,13 +489,12 @@ server <- function(input,output){
             }
           }
           
-          #perc1 <- sum(sim_hm$Rp<fold1)/100
-          perc2 <- sum(sim_hm$Rf>=fold1)/100
-          perc3 <- sum(sim_hm$Rf>=fold2)/100
-          perc4 <- sum(sim_hm$Rf>=fold3)/100
-          perc5 <- sum(sim_hm$Rf>=fold4)/100
-          perc6 <- sum(sim_hm$Rf>=fold5)/100
-          perc7 <- sum(sim_hm$Rf>=fold6)/100
+          perc2 <- sum(Rfmin>=fold1)/100
+          perc3 <- sum(Rfmin>=fold2)/100
+          perc4 <- sum(Rfmin>=fold3)/100
+          perc5 <- sum(Rfmin>=fold4)/100
+          perc6 <- sum(Rfmin>=fold5)/100
+          perc7 <- sum(Rfmin>=fold6)/100
           
           sum1 <- data.frame(time = rep(i,6)/24, 
                              bin = c(fold1,fold2,fold3,fold4,fold5,fold6), 
@@ -527,25 +515,20 @@ server <- function(input,output){
         
         #----- lung conc / EC50 --------
         
-        sim_hm <- sim_p[0,]
+        Rlmin <- NULL
         
         sum_hm_l <- data.frame(time = NULL, bin = NULL,perc = NULL)
         sum_toxi_l <- data.frame(time = NULL, bin = NULL, perc = NULL)
         
         for (i in (1:ceiling(D1+D2))*24){
-          if (i <= D1) {
-            ii <- ii1
+          if (i == 24) {
+            Rlmin <- sim_p[sim_p$time==ii1,]$Rl
           }else{
-            if (amount2 == 0) {
-              ii <- 24
-            }else{
-              ii <- ii2
-            } 
+            
+            for (k in 1:100){
+              Rlmin[k] <- min(sim_p[sim_p$sim.id == k & sim_p$time > (i-24) & sim_p$time <= i,]$Rl)
+            }
           }
-          if (ii >24) {
-            ii <- 24
-          }
-          sim_hm <- sim_p[sim_p$time==(i - 24 + ii),]
           
           count <- 0
           for (j in 1:100){
@@ -556,13 +539,12 @@ server <- function(input,output){
             }
           }
           
-          #perc1 <- sum(sim_hm$Rl<fold1)/100
-          perc2 <- sum(sim_hm$Rl>=fold1)/100
-          perc3 <- sum(sim_hm$Rl>=fold2)/100
-          perc4 <- sum(sim_hm$Rl>=fold3)/100
-          perc5 <- sum(sim_hm$Rl>=fold4)/100
-          perc6 <- sum(sim_hm$Rl>=fold5)/100
-          perc7 <- sum(sim_hm$Rl>=fold6)/100
+          perc2 <- sum(Rlmin>=fold1)/100
+          perc3 <- sum(Rlmin>=fold2)/100
+          perc4 <- sum(Rlmin>=fold3)/100
+          perc5 <- sum(Rlmin>=fold4)/100
+          perc6 <- sum(Rlmin>=fold5)/100
+          perc7 <- sum(Rlmin>=fold6)/100
           
           #perc0 <- sum(sim_hm$Rl>=toxi)/100
           
