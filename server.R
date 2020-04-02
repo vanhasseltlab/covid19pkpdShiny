@@ -183,8 +183,8 @@ server <- function(input,output){
           mod_HCQ2 <- RxODE("
                             CL = (TV_CL * (WT/M_WT)^F_CL) * exp(eta_CL);
                             V1 = (TV_V1 * (WT/M_WT)^F_V1) * exp(eta_V1);
-                            V2 = TV_V2 * exp(eta_V2) ;
-                            Q = TV_Q;
+                            V2 = (TV_V2 * (WT/M_WT)^F_V2) * exp(eta_V2) ;
+                            Q = TV_Q * (WT/M_WT)^F_Q;
                             C1 = centr/V1;
                             C2 = peri/V2;
                             Cf = C1*fu;
@@ -207,16 +207,18 @@ server <- function(input,output){
                       TV_Q = 45.1, 
                       F_CL = 0.75, 
                       F_V1 = 1.0, 
+                      F_Q = 0.75, 
+                      F_V2 = 1.0,
                       ka = 1.15, 
                       Tlag = 0.389,
                       WT = WT, 
-                      M_WT = 76.2,
+                      M_WT = 66.76,
                       EC50 = EC50,
                       fu = fu,
                       ke0 = 6.166944,
                       Kp = 171.847380*0.2892984)
           omega <- diag(4);
-          diag(omega) <- c(0.161^2, 0.232^2, 0.715^2, 0.0359^2)
+          diag(omega) <- c(0.161, 0.232, 0.715, 0.0359)
           dimnames(omega) <- list(NULL, c("eta_CL", "eta_V1", "eta_V2", "eta_Tlag"))
 
           inits <- c(depot=0, centr=0, peri=0,effect = 0)
