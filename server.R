@@ -61,10 +61,10 @@ server <- function(input,output){
         
       }else if(input$drugname == "Hydroxychloroquine"){
         
-        amt1_1 <- input$amt1_1_2
-        amt1_2 <- input$amt1_2_2
-        amt2_1 <- input$amt2_1_2
-        amt2_2 <- input$amt2_2_2
+        amt1_1 <- input$amt1_1_2*155/200
+        amt1_2 <- input$amt1_2_2*155/200
+        amt2_1 <- input$amt2_1_2*155/200
+        amt2_2 <- input$amt2_2_2*155/200
         D1     <- input$D1_2/24
         ii1    <- input$ii1_2
         D2     <- input$D2_2
