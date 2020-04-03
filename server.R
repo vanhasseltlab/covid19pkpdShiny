@@ -12,6 +12,7 @@ library(dplyr)
 library(egg)
 library(grid)
 library(shinyhelper)
+library(MASS)
 
 #---------------------initalize plotting------------------------
 pl <- ggplot()+
@@ -233,74 +234,26 @@ server <- function(input,output){
             amount1_2 <- input$amt1_2_4
             amount2_2 <- input$amt2_2_4
           }
-          
-          if(amount1_2 == 0 & amount2_2 == 0 ){
-            
-            #pk2 <- pl+xlim (0,100) + ylim (0,100) + ylab(paste0('Concentration (',input$concunit,')'))
-            AUC_rtv <- 0
-            
-          }else{
-          #--------------RTV PK-----------------
-          mod_rtv1 <- RxODE("
-                  F = TV_F * exp(eta_F);
-                            CL = F * TV_CL * CL_LPV ^ LPV* exp(eta_CL) ;
-                            V = F * TV_V * exp(eta_V);
-                            ka = TV_ka * exp(eta_ka);
-                            C1 = centr/V;
-                            Kp = 1;
-                            Clung = Kp*C1;
-                            d/dt(depot) = - ka*depot;
-                            lag(depot) = Tlag;
-                            d/dt(centr) = ka*depot - CL*C1;
-                            d/dt(AUC) = C1;"
-          )
-          # parameters
-          pars_rtv <- c(TV_F = 1, TV_CL = 10.5, TV_V = 96.6, 
-                        TV_ka = 0.871, Tlag = 0.778, 
-                        CL_LPV = 2.72, LPV = 1)
-          # IIV without correlation
-          omega_rtv <- diag(4);
-          diag(omega_rtv) <- c(0.349, 0.147, 0.64, 2.856)
-          dimnames(omega_rtv) <- list(c("eta_F", "eta_CL", "eta_V", "eta_ka"), 
-                                      c("eta_F", "eta_CL", "eta_V", "eta_ka"))
-          
-          inits_rtv <- c(depot=0, centr=0)
 
-          ev2 <- eventTable()
-          if (amount1_2 >0) {
-            if(nbr1 > 1){
-              ev2$add.dosing(dose = amount1_2, start.time = 0, nbr.doses = nbr1, dosing.interval = ii1, dosing.to = "depot")
-            }else{
-              ev2$add.dosing(dose = amount1_2, start.time = 0, dosing.to = "depot")  
-            }
-          }
-          if (amount2_2 >0) {
-            if (nbr2 > 1){
-              ev2$add.dosing(dose = amount2_2, start.time = D1*24,nbr.doses = nbr2,dosing.interval = ii2,dosing.to = "depot")
-            }else{
-              ev2$add.dosing(dose = amount2_2, start.time = D1*24,dosing.to = "depot")
-            }
-          }
-          ev2$add.sampling(seq(0,(D1+D2)*24,1))
-
-          sim_rtv <- solve(mod_rtv1, pars_rtv, ev2, inits_rtv, omega=omega_rtv, nSub=100,seed = 12)
+          nsub <- 100
           
-          # calculate AUC0-12 for ritonavir at steady state
-          AUC0_12 <- sim_rtv %>%
-            group_by(sim.id) %>% 
-            filter(time == 12) %>%
-            ungroup()
+          ##### Ritonavir part #############
+          # correlation to covariance 
+          omega_rtv <- matrix(c(0.1467, 0, 0, 0, 0.64, 1.1735, 0, 1.1735, 2.8561), nrow = 3, 
+                              dimnames=list(c("eta_CL", "eta_V", "eta_ka"), c("eta_CL", "eta_V", "eta_ka")))
+          # IIV covariance matrix
           
-          # co-variates 
-          AUC_rtv =  median(AUC0_12$AUC)      # median ritonavir AUC0-12
-          }
+          #  parameters or covariates
+          LPV <- 1    # 1 for individuals using lopinavir
+          TV_CL_rtv <- 10.5
+          CL_LPV = 2.72
+          
+          # Dose for RTV: 100 mg twice a day for 14 days
+          Dose_rtv <- amount1_2       # mg, mantainance dose for ritonavir
+          
+          ##### Lopinavir part #############
           # 1-cmt model for Lopinavir
           mod_lpv1 <- RxODE("
-                            F = TV_F * exp(eta_F);
-                            ka = TV_ka * exp(eta_ka);
-                            I_rtv = 1 - (Imax * AUC_rtv / (AUC50 + AUC_rtv));
-                            CL = F * TV_CL * I_rtv * IND * exp(eta_CL);
-                            V = F * TV_V * exp(eta_V);
                             C1 = centr/V;
                             Cf = C1*fu;
                             Kp = 0.51;
@@ -309,29 +262,94 @@ server <- function(input,output){
                             Rp = C1/EC50;
                             Rf = Cf/EC50;
                             d/dt(depot) = - ka*depot;
-                            d/dt(centr) = ka*depot - CL*C1;"
+                            d/dt(centr) = ka*depot - CL*C1"
           )
           
-          # parameters
+          # correlation to covariance
+          omega_lpv <- matrix(c(0.9565, -0.0449, 0.5129, -0.0449, 0.0296, 0.0266, 0.5129, 0.0266, 0.4070), nrow = 3, 
+                              dimnames=list(c("eta_CL", "eta_V", "eta_ka"), c("eta_CL", "eta_V", "eta_ka")))   # IIV covariance matrix
+          
+          # initial states
+          inits_lpv <- c(depot=0, centr=0)
+          
+          # parameters or covariates
+          IND <- 1    # without treatment with efavirenz or nevirapine, otherwise = 1.39
+          Imax <- 1
+          AUC50 <- 2.26
+          
+          TV_ka <- 0.564
+          TV_CL <- 14.8
+          TV_V <- 61.6
+          TV_F <- 1
+          fu <- 0.0145
           EC50 <- switch(input$ec50_3,
                          "SARS-cov-2 5.73ug/ml (Jeon et al. bioRxiv(2020))" = 5.73,
                          "SARS-cov-1 4ug/ml (Chu CM et al. Thorax(2004))" = 4,
                          "SARS-cov-1 2.52ug/ml (de Wilde AH et al. AAC(2014))" = 2.52,
                          "Mers-cov 4.4ug/ml (de Wilde AH et al. AAC(2014))" = 4.4)
-
-          pars_lpv <- c(Imax = 1, AUC50 = 2.26, TV_ka = 0.564, AUC_rtv = AUC_rtv,
-                        TV_F = 1, TV_CL = 14.8, TV_V = 61.6, IND = 1, EC50 = EC50, fu = fu)
           
-          # IIV without correlation
-          omega_lpv <- diag(4);
-          diag(omega_lpv) <- c(0.031, 0.030, 0.256, 0.956)
-          dimnames(omega_lpv) <- list(c("eta_F", "eta_CL", "eta_V", "eta_ka"), 
-                                      c("eta_F", "eta_CL", "eta_V", "eta_ka"))
+          ####### sample F for each individual and each dose event #####
+          # Information from shiny, changable
+          # dosing schedule for lopinarvir
+          # duration
+          duration_L <- D1*24 # days - hours, for loading doses
+          duration_M <- D2*24 # days - hours, for maintanance doses
+          duration <- duration_L + duration_M   # 7 days
           
-          inits_lpv <- c(depot=0, centr=0)
+          # dose interval and nbr.dose
+          ii_L <- ii1
+          ii_M <- ii2
+          ndose_L <- duration_L/ii_L
+          ndose_M <- duration_M/ii_M
+          ii <- rep(c(ii_L, ii_M), c(ndose_L, ndose_M))
+          ndose <- ndose_L + ndose_M    # ndose = 9
           
-          sim_p <- solve(mod_lpv1, pars_lpv, ev1, inits_lpv, omega=omega_lpv, nSub=100,seed = 12)
-
+          # amount
+          amt_L <- amount1  # loading 
+          amt_M <- amount2  # maintainance
+          amt <- rep(c(amt_L, amt_M), c(ndose_L, ndose_M))
+          
+          # Dose for RTV: 100 mg twice a day for 14 days
+          Dose_rtv <- amount1_2       # mg, mantainance dose for ritonavir
+          
+          
+          # IIV and IOV sampling
+          set.seed(0403)
+          pi_lpv <- rnorm(n=nsub*ndose, 0, 0.175)  # Sample for IOV
+          count <- 0
+          
+          mv_rtv <- mvrnorm(n=nsub, rep(0,3), omega_rtv) # IIV sampling for ritonavir: CL
+          CL_rtv = TV_CL_rtv * CL_LPV ^ LPV * exp(mv_rtv[,1])
+          AUC_rtv = Dose_rtv/CL_rtv
+          I_rtv = 1 - (Imax * AUC_rtv / (AUC50 + AUC_rtv))
+          
+          mv_lpv <- mvrnorm(n=nsub, rep(0,3), omega_lpv) # IIV Sampling for lopinariv: ka, CL and V
+          
+          ######### simulation test ############
+          
+          sim_p <- NULL
+          for (i in 1:nsub){
+            start <- 0
+            # sample one IIV for CL/V/Ka, one IOV for F and one CL_rtv
+            ka <- TV_ka * exp(mv_lpv[i,1])
+            CL <- TV_CL * I_rtv[i] * IND * exp(mv_lpv[i,2])
+            V <- TV_V * exp(mv_lpv[i,3])
+            pars_lpv <- cbind(ka, CL, V, fu, EC50)
+            
+            F1 <- 1 * exp(pi_lpv[i])
+            ev1 <- eventTable() %>% add.sampling(0:duration) 
+            for (j in 1:ndose){
+              # sample one F for each dose event
+              count <- count+1
+              F1 <- 1 * exp(pi_lpv[count])
+              
+              ev1 <- ev1 %>% add.dosing(dose = amt[j] * F1, start.time = start, dosing.to = "depot")
+              start <- start + ii[j]
+            }
+            x <- solve(mod_lpv1, pars_lpv, ev1, inits_lpv)
+            x <- cbind(x, sim.id = i) 
+            sim_p <- rbind(sim_p, x)
+          }
         }
         incProgress(1/3)
         
@@ -339,8 +357,8 @@ server <- function(input,output){
         #------------------plotting plasma concentration-------------------
         toxi <- switch(input$drugname,
                        "Chloroquine" = 0.52,
-                       "Hydroxychloroquine" = 4.42,
-                       "Lopinavir + Ritonavir" = 27.05)
+                       "Hydroxychloroquine" = 3.14,
+                       "Lopinavir + Ritonavir" = 45.37)
         
         # 95% CI
         sim_qt_p <- data.frame(time=NULL, qt_025=NULL, qt_50=NULL, qt_975=NULL)
