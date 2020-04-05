@@ -240,7 +240,7 @@ body <- dashboardBody(
                                                  "SARS-cov-1 2.81ug/ml (Keyaerts E et al. BBRC(2004))",
                                                  "SARS-cov-1 1.41ug/ml (Vincent MJ et al. Virol J(2005))",
                                                  "SARS-cov-1 1.31ug/ml (de Wilde AH et al. AAC(2014))",
-                                                 "Mers-cov 0.96ug/ml (de Wilde AH et al. AAC(2014))"),
+                                                 "MERS-cov 0.96ug/ml (de Wilde AH et al. AAC(2014))"),
                                      selected = "SARS-cov-2 1.75ug/ml (Yao et al. CID(2020))"),
                          conditionalPanel(condition = "input.ec50_1 == 'SARS-cov-2 1.75ug/ml (Yao et al. CID(2020))'",
                                           tags$a(href="https://academic.oup.com/cid/advance-article/doi/10.1093/cid/ciaa237/5801998",target="_blank", "Yao et al. CID(2020)",style = "font-size:12px;font-style: italic;")),
@@ -254,7 +254,7 @@ body <- dashboardBody(
                                           tags$a(href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1232869/",target="_blank", "Vincent MJ et al. Virol J(2005)",style = "font-size:12px;font-style: italic;")),
                          conditionalPanel(condition = "input.ec50_1 == 'SARS-cov-1 1.31ug/ml (de Wilde AH et al. AAC(2014))'",
                                           tags$a(href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4136071/",target="_blank", "de Wilde AH et al. AAC(2014)",style = "font-size:12px;font-style: italic;")),
-                         conditionalPanel(condition = "input.ec50_1 == 'Mers-cov 0.96ug/ml (de Wilde AH et al. AAC(2014))'",
+                         conditionalPanel(condition = "input.ec50_1 == 'MERS-cov 0.96ug/ml (de Wilde AH et al. AAC(2014))'",
                                           tags$a(href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4136071/",target="_blank", "de Wilde AH et al. AAC(2014)",style = "font-size:12px;font-style: italic;"))
                          ),
         conditionalPanel(condition = "input.drugname == 'Hydroxychloroquine'",
@@ -269,13 +269,13 @@ body <- dashboardBody(
                                      choices = c("SARS-cov-2 5.73ug/ml (Jeon et al. bioRxiv(2020))",
                                                  "SARS-cov-1 4ug/ml (Chu CM et al. Thorax(2004))",
                                                  "SARS-cov-1 10.75ug/ml (de Wilde AH et al. AAC(2014))",
-                                                 "Mers-cov 5.03ug/ml (de Wilde AH et al. AAC(2014))"),
+                                                 "MERS-cov 5.03ug/ml (de Wilde AH et al. AAC(2014))"),
                                      selected = "SARS-cov-2 5.73ug/ml (Jeon et al. bioRxiv(2020))"),
                          conditionalPanel(condition = "input.ec50_3 == 'SARS-cov-2 5.73ug/ml (Jeon et al. bioRxiv(2020))'",
                                           tags$a(href="https://doi.org/10.1101/2020.03.20.999730",target="_blank", "Jeon et al. bioRxiv(2020)",style = "font-size:12px;font-style: italic;")),
                          conditionalPanel(condition = "input.ec50_3 == 'SARS-cov-1 4ug/ml (Chu CM et al. Thorax(2004))'",
                                           tags$a(href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1746980/",target="_blank", "Chu CM et al. Thorax(2004)",style = "font-size:12px;font-style: italic;")),
-                         conditionalPanel(condition = "input.ec50_3 == 'Mers-cov 5.03ug/ml (de Wilde AH et al. AAC(2014))'| input.ec50_3 == 'SARS-cov-1 10.75ug/ml (de Wilde AH et al. AAC(2014))'",
+                         conditionalPanel(condition = "input.ec50_3 == 'MERS-cov 5.03ug/ml (de Wilde AH et al. AAC(2014))'| input.ec50_3 == 'SARS-cov-1 10.75ug/ml (de Wilde AH et al. AAC(2014))'",
                                           tags$a(href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4136071/",target="_blank", "de Wilde AH et al. AAC(2014)",style = "font-size:12px;font-style: italic;"))
         )
         ),
