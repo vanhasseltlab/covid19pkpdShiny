@@ -267,14 +267,11 @@ body <- dashboardBody(
         conditionalPanel(condition = "input.drugname == 'Lopinavir + Ritonavir'",
                          pickerInput("ec50_3", "Select EC50 for Lopinavir:",
                                      choices = c("SARS-cov-2 5.73ug/ml (Jeon et al. bioRxiv(2020))",
-                                                 "SARS-cov-1 4ug/ml (Chu CM et al. Thorax(2004))",
                                                  "SARS-cov-1 10.75ug/ml (de Wilde AH et al. AAC(2014))",
                                                  "MERS-cov 5.03ug/ml (de Wilde AH et al. AAC(2014))"),
                                      selected = "SARS-cov-2 5.73ug/ml (Jeon et al. bioRxiv(2020))"),
                          conditionalPanel(condition = "input.ec50_3 == 'SARS-cov-2 5.73ug/ml (Jeon et al. bioRxiv(2020))'",
                                           tags$a(href="https://doi.org/10.1101/2020.03.20.999730",target="_blank", "Jeon et al. bioRxiv(2020)",style = "font-size:12px;font-style: italic;")),
-                         conditionalPanel(condition = "input.ec50_3 == 'SARS-cov-1 4ug/ml (Chu CM et al. Thorax(2004))'",
-                                          tags$a(href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1746980/",target="_blank", "Chu CM et al. Thorax(2004)",style = "font-size:12px;font-style: italic;")),
                          conditionalPanel(condition = "input.ec50_3 == 'MERS-cov 5.03ug/ml (de Wilde AH et al. AAC(2014))'| input.ec50_3 == 'SARS-cov-1 10.75ug/ml (de Wilde AH et al. AAC(2014))'",
                                           tags$a(href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4136071/",target="_blank", "de Wilde AH et al. AAC(2014)",style = "font-size:12px;font-style: italic;"))
         )

@@ -284,7 +284,6 @@ server <- function(input,output){
           fu <- 0.0145
           EC50 <- switch(input$ec50_3,
                          "SARS-cov-2 5.73ug/ml (Jeon et al. bioRxiv(2020))" = 5.73,
-                         "SARS-cov-1 4ug/ml (Chu CM et al. Thorax(2004))" = 4,
                          "SARS-cov-1 10.75ug/ml (de Wilde AH et al. AAC(2014))" = 10.75,
                          "MERS-cov 5.03ug/ml (de Wilde AH et al. AAC(2014))" = 5.03)
           
