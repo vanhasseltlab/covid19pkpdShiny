@@ -338,7 +338,7 @@ body <- dashboardBody(
                 tags$a(href="https://klpharm.meduniwien.ac.at/organization/section-of-clinical-pharmacokinetics-pharmacogenetics-and-imaging/team/markus-zeitlinger/",target="_blank", "Markus Zeitlinger"),",",
                 tags$a(href="https://researchers.uq.edu.au/researcher/1526",target="_blank", "Jason Roberts"),",",
                 tags$a(href="https://www.universiteitleiden.nl/en/staffmembers/parth-upadhyay#tab-1",target="_blank", "Parth Upadhyay"),",",
-                tags$a(href="https://www.pmxsolutions.com/",target="_blank", "Michiel J. van Esdonk"),",",
+                tags$a(href="https://nl.linkedin.com/in/mj-van-esdonk",target="_blank", "Michiel J. van Esdonk"),",",
                 tags$a(href="https://www.universiteitleiden.nl/en/staffmembers/coen-van-hasselt#tab-1",target="_blank", "J.G.C. van Hasselt"),
                 br(),
                 tags$a(href="http://vanhasseltlab.nl/",target="_blank", "van Hasselt Group"),
