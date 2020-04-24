@@ -357,7 +357,7 @@ server <- function(input,output){
         toxi <- switch(input$drugname,
                        "Chloroquine" = 0.52,
                        "Hydroxychloroquine" = 3.14,
-                       "Lopinavir + Ritonavir" = 45.37)
+                       "Lopinavir + Ritonavir" = 13.233)
         
         # 95% CI
         sim_qt_p <- data.frame(time=NULL, qt_025=NULL, qt_50=NULL, qt_975=NULL)
