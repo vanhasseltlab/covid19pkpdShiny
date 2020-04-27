@@ -154,10 +154,7 @@ server <- function(input,output){
                          "SARS-cov-2 1.75ug/ml (Yao et al. CID(2020))" = 1.75,
                          "SARS-cov-2 0.36ug/ml (Wang et al. Cell Res(2020))" = 0.36,
                          "SARS-cov-2 2.33ug/ml (Jeon et al. bioRxiv(2020))" = 2.33,
-                         "SARS-cov-1 2.81ug/ml (Keyaerts E et al. BBRC(2004))" = 2.81,
-                         "SARS-cov-1 1.41ug/ml (Vincent MJ et al. Virol J(2005))" = 1.41,
-                         "SARS-cov-1 1.31ug/ml (de Wilde AH et al. AAC(2014))" = 1.31,
-                         "MERS-cov 0.96ug/ml (de Wilde AH et al. AAC(2014))" = 0.96)
+                         "SARS-cov-2 0.87ug/ml (Liu et al. Cell Discov(2020))" = 0.87)
 
           par1 <- c(Ka   = 6.12,
                     TLAG = 0.387,
@@ -200,7 +197,9 @@ server <- function(input,output){
                             d/dt(effect) = ke0*C1-ke0*effect/Kp;
                             ")
           
-          EC50 = 0.24
+          EC50 <- switch(input$ec50_2,
+                         "SARS-cov-2 0.24ug/ml (Yao et al. CID(2020))" = 0.24,
+                         "SARS-cov-2 1.51ug/ml (Liu et al. Cell Discov(2020))" = 1.51)
           
           params <- c(TV_CL = 10.9, 
                       TV_V1  = 437, 
@@ -284,8 +283,7 @@ server <- function(input,output){
           fu <- 0.0145
           EC50 <- switch(input$ec50_3,
                          "SARS-cov-2 5.73ug/ml (Jeon et al. bioRxiv(2020))" = 5.73,
-                         "SARS-cov-1 10.75ug/ml (de Wilde AH et al. AAC(2014))" = 10.75,
-                         "MERS-cov 5.03ug/ml (de Wilde AH et al. AAC(2014))" = 5.03)
+                         "SARS-cov-2 16.75ug/ml (Choy et al. AR(2020))" = 16.75)
           
           ####### sample F for each individual and each dose event #####
           # Information from shiny, changable
